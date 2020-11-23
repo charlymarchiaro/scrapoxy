@@ -7,7 +7,10 @@ module.exports = {
         port: 8888,
         domains_allowed: [],
         domains_forbidden: [],
-
+        auth: {
+            username: process.env.PROXY_USERNAME,
+            password: process.env.PROXY_PASSWORD,
+        },
         mitm: false,
     },
 
