@@ -5,6 +5,7 @@ const _ = require('lodash'),
     https = require('https'),
     url = require('url');
 
+const DROPLETS_PATH = process.env.PROVIDERS_DIGITALOCEAN_DROPLETS_PATH
 
 module.exports = class DigitalOceanAPI {
     constructor(token) {
@@ -16,7 +17,7 @@ module.exports = class DigitalOceanAPI {
     getAllDroplets() {
         const options = {
             method: 'GET',
-            path: '/droplets',
+            path: '/' + DROPLETS_PATH,
         };
 
         return this._makePaginateRequests('droplets', options);
@@ -26,7 +27,7 @@ module.exports = class DigitalOceanAPI {
     createDroplet(params) {
         const options = {
             method: 'POST',
-            path: '/droplets',
+            path: '/' + DROPLETS_PATH,
         };
 
         return this._makeRequest(options, params);
@@ -40,7 +41,7 @@ module.exports = class DigitalOceanAPI {
 
         const options = {
             method: 'POST',
-            path: `/droplets/${id}/actions`,
+            path: `/${DROPLETS_PATH}/${id}/actions`,
         };
 
         return this._makeRequest(options, params);
@@ -50,7 +51,7 @@ module.exports = class DigitalOceanAPI {
     removeDroplet(id) {
         const options = {
             method: 'DELETE',
-            path: `/droplets/${id}`,
+            path: `/${DROPLETS_PATH}/${id}`,
         };
 
         return this._makeRequest(options)
