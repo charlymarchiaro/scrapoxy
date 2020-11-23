@@ -53,7 +53,16 @@ module.exports = class ProviderDigitalOcean {
     get models() {
         const self = this;
 
-        return self._api.getAllDroplets()
+        const params = {};
+
+        if (self._config.tags) {
+            params.tags = self._config.tags.split(',');
+        }
+        else {
+            params.tags = [];
+        }
+
+        return self._api.getAllDroplets(params)
             .then(summarizeInfo)
             .then(excludeArchive)
             .then(excludeRegion)
@@ -120,23 +129,23 @@ module.exports = class ProviderDigitalOcean {
             function convertStatus(status) {
                 switch (status) {
                     case ProviderDigitalOcean.ST_NEW:
-                    {
-                        return InstanceModel.STARTING;
-                    }
+                        {
+                            return InstanceModel.STARTING;
+                        }
                     case ProviderDigitalOcean.ST_ACTIVE:
-                    {
-                        return InstanceModel.STARTED;
-                    }
+                        {
+                            return InstanceModel.STARTED;
+                        }
                     case ProviderDigitalOcean.ST_OFF:
-                    {
-                        return InstanceModel.STOPPED;
-                    }
+                        {
+                            return InstanceModel.STOPPED;
+                        }
                     default:
-                    {
-                        winston.error('[ProviderDigitalOcean] Error: Found unknown status:', status);
+                        {
+                            winston.error('[ProviderDigitalOcean] Error: Found unknown status:', status);
 
-                        return InstanceModel.ERROR;
-                    }
+                            return InstanceModel.ERROR;
+                        }
                 }
             }
         }
@@ -165,7 +174,7 @@ module.exports = class ProviderDigitalOcean {
 
                 throw err;
             })
-        ;
+            ;
 
 
         ////////////
@@ -192,7 +201,7 @@ module.exports = class ProviderDigitalOcean {
             function getImageByName(name) {
                 return self._api.getAllImages(true)
                     .then((images) => {
-                        const image = _.find(images, {name});
+                        const image = _.find(images, { name });
                         if (!image) {
                             throw new Error(`Cannot find image by name '${name}'`);
                         }
@@ -204,7 +213,7 @@ module.exports = class ProviderDigitalOcean {
             function getSSHkeyByName(name) {
                 return self._api.getAllSSHkeys()
                     .then((sshKeys) => {
-                        const sshKey = _.find(sshKeys, {name});
+                        const sshKey = _.find(sshKeys, { name });
                         if (!sshKey) {
                             throw new Error(`Cannot find ssh_key by name '${name}'`);
                         }

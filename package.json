@@ -47,7 +47,8 @@
         "ovh": "~2.0.1",
         "request": "~2.83.0",
         "socket.io": "~2.0.4",
-        "winston": "~2.4.0"
+        "winston": "~2.4.0",
+        "nodemon": "^2.0.4"
     },
     "devDependencies": {
         "chai": "~4.1.2",
@@ -60,11 +61,23 @@
         "interpret": "~1.1.0",
         "multimatch": "~2.1.0"
     },
+    "nodemonConfig": {
+        "verbose": true,
+        "watch": [
+            "*"
+        ],
+        "ignore": [
+            "dist/*"
+        ],
+        "ext": "js",
+        "exec": "node server/index.js start"
+    },
     "engines": {
         "node": ">=8.0.0"
     },
     "scripts": {
-        "start": "node server/index.js"
+        "start": "node server/index.js start",
+        "dev": "nodemon"
     },
     "preferGlobal": true,
     "bin": {

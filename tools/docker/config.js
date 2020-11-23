@@ -12,6 +12,11 @@ if (emptyConfig(process.env.PROVIDERS_TYPE)) {
 module.exports = {
     proxy: {
         port: parseInt(process.env.PROXY_PORT || '8888'),
+
+        auth: {
+            username: process.env.PROXY_USERNAME || '',
+            password: process.env.PROXY_PASSWORD || '',
+        },
     },
 
     commander: {
@@ -67,7 +72,7 @@ function checkConfig(value, name) {
 
 function getProvidersByType() {
     const providerType = process.env.PROVIDERS_TYPE || 'awsec2';
-    switch(providerType) {
+    switch (providerType) {
         case 'awsec2': {
             let max;
             if (process.env.PROVIDERS_AWSEC2_MAX) {

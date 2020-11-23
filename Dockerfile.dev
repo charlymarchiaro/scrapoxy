@@ -26,4 +26,4 @@ COPY . /app
 ADD tools/docker/config.js .
 
 # Start scrapoxy
-CMD npm run start config.js -d
+CMD npm run dev config.js -d

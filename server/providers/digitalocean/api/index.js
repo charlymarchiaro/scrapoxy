@@ -1,11 +1,11 @@
 'use strict';
 
+const { result } = require('lodash');
 const _ = require('lodash'),
     Promise = require('bluebird'),
     https = require('https'),
     url = require('url');
 
-const DROPLETS_PATH = process.env.PROVIDERS_DIGITALOCEAN_DROPLETS_PATH
 
 module.exports = class DigitalOceanAPI {
     constructor(token) {
@@ -14,10 +14,17 @@ module.exports = class DigitalOceanAPI {
 
 
     // DROPLETS
-    getAllDroplets() {
+    getAllDroplets(params) {
+        const qs = {};
+
+        if (params && params.tags) {
+            qs.tag_name = params.tags[0];
+        }
+
         const options = {
             method: 'GET',
-            path: '/' + DROPLETS_PATH,
+            path: '/droplets',
+            qs
         };
 
         return this._makePaginateRequests('droplets', options);
@@ -27,7 +34,7 @@ module.exports = class DigitalOceanAPI {
     createDroplet(params) {
         const options = {
             method: 'POST',
-            path: '/' + DROPLETS_PATH,
+            path: '/droplets',
         };
 
         return this._makeRequest(options, params);
@@ -41,7 +48,7 @@ module.exports = class DigitalOceanAPI {
 
         const options = {
             method: 'POST',
-            path: `/${DROPLETS_PATH}/${id}/actions`,
+            path: `/droplets/${id}/actions`,
         };
 
         return this._makeRequest(options, params);
@@ -51,7 +58,7 @@ module.exports = class DigitalOceanAPI {
     removeDroplet(id) {
         const options = {
             method: 'DELETE',
-            path: `/${DROPLETS_PATH}/${id}`,
+            path: `/droplets/${id}`,
         };
 
         return this._makeRequest(options)
@@ -95,7 +102,7 @@ module.exports = class DigitalOceanAPI {
     }
 
 
-    _makeRequest(options, body) {
+    _makeRequest(options, body) {        
         const path = url.format({
             pathname: `/v2${options.path}`,
             query: options.qs,
